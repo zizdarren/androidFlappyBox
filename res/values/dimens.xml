@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="boxSide">100dp</dimen>
+    <dimen name="obsW">100dp</dimen>
+    <dimen name="obsH">100dp</dimen>
+    <dimen name="groud">100dp</dimen>
+</resources>
