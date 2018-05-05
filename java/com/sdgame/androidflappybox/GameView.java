@@ -83,7 +83,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         double updateOffsetTime = 0;
         int frames = 0;
         int updates = 0;
-        long secondTimer = System.currentTimeMillis();
+         long secondTimer = System.currentTimeMillis();
 
         init();
 
@@ -115,20 +115,22 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
             }
 
 
-            if(System.currentTimeMillis() - secondTimer >= 1000){
+            if (System.currentTimeMillis() - secondTimer >= 1000) {
                 secondTimer += 1000;
-                System.out.println("Update: " + updates + " , Frames: "+ frames);
+                System.out.println("Update: " + updates + " , Frames: " + frames);
                 updates = 0;
                 frames = 0;
 
                 //obstacle spawner
-                if(secondTimer/1000 % 3 == 1 && !gameOver){  //obstacle spawner
-                    int r = R.nextInt(HEIGHT*3/4 - (int)obspace);
+                if (secondTimer / 1000 % 3 == 1 && !gameOver) {  //obstacle spawner
+                    System.out.println(secondTimer / 1000 % 3);
+                    int r = R.nextInt(HEIGHT * 3 / 4 - (int) obspace);
                     obs.add(new Obstacle(WIDTH, 0, r));
-                    obs.add(new Obstacle(WIDTH, r + obspace, HEIGHT*3/4 - r - obspace));
-                    System.out.println(r);
+                    obs.add(new Obstacle(WIDTH, r + obspace, HEIGHT * 3 / 4 - r - obspace));
+                    System.out.println(obs.size());
                 }
             }
+
 
 
         }

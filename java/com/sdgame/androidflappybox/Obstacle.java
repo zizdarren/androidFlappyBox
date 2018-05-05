@@ -19,16 +19,16 @@ public class Obstacle {
     public Obstacle(float posX, float posY, float height){
         this.posX = posX * GameView.density;
         this.posY = posY * GameView.density;
+        this.height = height;
         this.posX2 = this.posX + this.width;
         this.posY2 = this.posY + this.height;
-        this.height = height * GameView.density;
         this.bound = new Rect((int)this.posX, (int)this.posY, (int)this.posX2, (int)this.posY2);
         this.midX = this.posX + this.width/2;
     }
 
     public void update(){
-        posX--;
-        posX2--;
+        posX = posX - 1* GameView.density;
+        posX2 = posX+ width;
         bound.set((int)posX, (int)posY, (int)posX2, (int)posY2);
         midX = posX + width/2;
     }
