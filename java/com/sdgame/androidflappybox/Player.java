@@ -21,8 +21,8 @@ public class Player {
 
     private float momentum = 0;
     private float fallSpeed = 0.40f * GameView.density;
-    private float maxfallSpeed = 6 * GameView.density;
-    private float jumpStart = -10 * GameView.density;
+    private float maxfallSpeed = 10 * GameView.density;
+    private float jumpStart = -8 * GameView.density;
 
     private boolean isJump = false;
 

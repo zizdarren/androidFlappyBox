@@ -26,8 +26,9 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
     private int FPS = 60;
 
     public static boolean gameOver = false;
-    private float obspace = 300 * GameView.density;
-    private int score;
+    private float obspace = 180;
+    private int score;  //initialize in init function
+    private volatile long spawntimer = 0;
 
     //drawing object
     private Paint paint;
@@ -46,6 +47,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         super(context);
 
         density = this.getResources().getDisplayMetrics().density;
+        obspace *= GameView.density;
         //WIDTH = getWidth();
         //HEIGHT = getHeight();
 
@@ -57,9 +59,9 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         //- change size
         this.getHolder().addCallback(this);
 
-        start();
     }
 
+    //this method is not use in here
     public void start(){
         if(gameThread == null){
             gameThread = new Thread(this);
@@ -83,7 +85,7 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
         double updateOffsetTime = 0;
         int frames = 0;
         int updates = 0;
-         long secondTimer = System.currentTimeMillis();
+        long secondTimer = System.currentTimeMillis();
 
         init();
 
@@ -122,12 +124,10 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 frames = 0;
 
                 //obstacle spawner
-                if (secondTimer / 1000 % 3 == 1 && !gameOver) {  //obstacle spawner
-                    System.out.println(secondTimer / 1000 % 3);
-                    int r = R.nextInt(HEIGHT * 3 / 4 - (int) obspace);
+                if (secondTimer / 1000 % 2 == 1 && !gameOver) {  //obstacle spawner
+                    float r = R.nextFloat()* (HEIGHT * 3 / 4 - obspace);
                     obs.add(new Obstacle(WIDTH, 0, r));
                     obs.add(new Obstacle(WIDTH, r + obspace, HEIGHT * 3 / 4 - r - obspace));
-                    System.out.println(obs.size());
                 }
             }
 
@@ -147,8 +147,10 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
                 }
 
                 if (!gameOver && i % 2 == 0) {
-                    if (player.getMidX() == obs.get(i).getMidX()) {
+                    if (!obs.get(i).getScored() && player.getMidX() > obs.get(i).getMidX()) {
                         score++;
+                        obs.get(i).setScored(true);
+                        obs.get(i+1).setScored(true);
                     }
                 }
 
@@ -179,16 +181,17 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
             for(Obstacle o : obs){
                 o.draw(canvas, paint);
+
                 // help to test the score condition
-                paint.setColor(Color.WHITE);
-                canvas.drawLine(o.getMidX(), 0, o.getMidX(), HEIGHT, paint);
+                //paint.setColor(Color.WHITE);
+                //canvas.drawLine(o.getMidX(), 0, o.getMidX(), HEIGHT, paint);
             }
 
             player.draw(canvas, paint);
 
             //testing player position
-            canvas.drawLine(player.getMidX(), 0, player.getMidX(), HEIGHT, paint);
-            canvas.drawLine(0, player.getMidY(), WIDTH,  player.getMidY(), paint);
+            //canvas.drawLine(player.getMidX(), 0, player.getMidX(), HEIGHT, paint);
+            //canvas.drawLine(0, player.getMidY(), WIDTH,  player.getMidY(), paint);
 
             paint.setColor(Color.WHITE);
 
@@ -198,8 +201,8 @@ public class GameView extends SurfaceView implements Runnable, SurfaceHolder.Cal
 
             if(gameOver){	//testing
                 paint.setColor(Color.BLACK);
-                canvas.drawText("Game Over", 100 * density, 100 * density, paint);
-                canvas.drawText("press space to restart", 50 * density, 150 * density, paint);
+                canvas.drawText("Game Over", WIDTH*1/4, HEIGHT*1/4, paint);
+                canvas.drawText("press space to restart", WIDTH*1/4, HEIGHT*2/4, paint);
             }
 
             //unlock the canvas and post on surface view
